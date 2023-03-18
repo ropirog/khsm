@@ -1,6 +1,5 @@
 require 'rails_helper'
-require 'support/my_spec_helper' # наш собственный класс с вспомогательными методами
-
+require 'support/my_spec_helper'
 RSpec.describe Game, type: :model do
   let(:user) { FactoryBot.create(:user) }
   let(:game_w_questions) { FactoryBot.create(:game_with_questions, user: user) }
@@ -13,7 +12,7 @@ RSpec.describe Game, type: :model do
         game = Game.create_game_for_user!(user)
       }.to change(Game, :count).by(1).and(
         change(GameQuestion, :count).by(15).and(
-          change(Question, :count).by(0)
+          change(Question, :count).by(0) # difficulty level didn't changes
         )
       )
       expect(game.user).to eq(user)
