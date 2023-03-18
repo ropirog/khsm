@@ -54,6 +54,14 @@ RSpec.describe Game, type: :model do
       expect(user.balance).to eq(prize)
     end
 
+    it '.current_game_question' do
+      expect(game_w_questions.current_game_question).to eq(game_w_questions.game_questions.first)
+    end
+
+    it '.previous_level' do
+      expect(game_w_questions.previous_level).to eq(game_w_questions.current_level - 1)
+    end
+
     context '.status' do
       before(:each) do
         game_w_questions.finished_at = Time.now
