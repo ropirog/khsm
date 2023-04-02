@@ -1,23 +1,10 @@
-# (c) goodprogrammer.ru
-#
-# Админский контроллер, только для наполнения базы вопросов с помощью файлов
-# определенного формата
-# Создает новую игру, обновляет статус игры по ответам юзера, выдает подсказки
-#
 class QuestionsController < ApplicationController
-  # проверяем залогинен ли юзер
   before_action :authenticate_user!
-
-  # проверяем админ ли он
   before_action :authorize_admin!
 
-  # GET /questions/new
-  # Форма для загрузки пачки вопросов
   def new
   end
 
-  # POST /questions
-  # Обработка формы, содержащей файл с вопросами и поле - уровень
   def create
     level = params[:questions_level].to_i
     q_file = params[:questions_file]
@@ -29,7 +16,6 @@ class QuestionsController < ApplicationController
     elsif q_file.respond_to?(:path)
       file_lines = File.readlines(q_file.path)
     else
-      # если файл нельзя прочитать, отправляем на экшен new c инфой об ошибках
       redirect_to new_questions_path, alert: "Bad file_data: #{q_file.class.name}, #{q_file.inspect}"
       return false
     end
