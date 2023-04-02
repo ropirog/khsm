@@ -13,7 +13,7 @@ RSpec.describe GameQuestion, type: :model do
 
     it 'correct .answer_correct?' do
       expect(game_question.answer_correct?('b')).to be_truthy
-      end
+    end
 
     it 'correct .correct_answer_key' do
       expect(game_question.correct_answer_key).to eq('b')
@@ -23,15 +23,20 @@ RSpec.describe GameQuestion, type: :model do
       expect(game_question.text).to eq(game_question.question.text)
       expect(game_question.level).to eq(game_question.question.level)
     end
-  end
 
-  # help_hash у нас имеет такой формат:
-  # {
-  #   fifty_fifty: ['a', 'b'], # При использовании подсказски остались варианты a и b
-  #   audience_help: {'a' => 42, 'c' => 37 ...}, # Распределение голосов по вариантам a, b, c, d
-  #   friend_call: 'Василий Петрович считает, что правильный ответ A'
-  # }
-  #
+    it 'correct .help_hash' do
+      expect(game_question.help_hash).to eq({})
+
+      game_question.help_hash[:some_key1] = 'blabla1'
+      game_question.help_hash['some_key2'] = 'blabla2'
+
+      expect(game_question.save).to be_truthy
+
+      gq = GameQuestion.find(game_question.id)
+
+      expect(gq.help_hash).to eq({ some_key1: 'blabla1', 'some_key2' => 'blabla2' })
+    end
+  end
 
   context 'user helpers' do
     it 'correct audience_help' do
