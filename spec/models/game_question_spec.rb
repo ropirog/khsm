@@ -61,5 +61,15 @@ RSpec.describe GameQuestion, type: :model do
       expect(ff).to include('b')
       expect(ff.size).to eq 2
     end
+
+    it 'correct friend_call' do
+      expect(game_question.help_hash).not_to include(:friend_call)
+
+      game_question.add_friend_call
+
+      expect(game_question.help_hash).to include(:friend_call)
+      fc = game_question.help_hash[:friend_call]
+      expect(fc.chars.last.downcase).to eq('b')
+    end
   end
 end
