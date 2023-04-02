@@ -9,9 +9,9 @@ RSpec.describe GamesController, type: :controller do
   context 'Anon' do
     it 'kick from #show' do
       get :show, id: game_w_questions.id
-      expect(response.status).not_to eq(200) # статус не 200 ОК
-      expect(response).to redirect_to(new_user_session_path) # devise должен отправить на логин
-      expect(flash[:alert]).to be # во flash должен быть прописана ошибка
+      expect(response.status).not_to eq(200)
+      expect(response).to redirect_to(new_user_session_path)
+      expect(flash[:alert]).to be
     end
 
     it 'kick from #create' do
@@ -76,6 +76,16 @@ RSpec.describe GamesController, type: :controller do
       expect(game.current_level).to be > 0
       expect(response).to redirect_to(game_path(game))
       expect(flash.empty?).to be_truthy
+    end
+
+    it 'answers incorrect' do
+      put :answer, id: game_w_questions.id, letter: 'a'
+      game = assigns(:game)
+
+      expect(game.finished?).to be_truthy
+      expect(game.current_level).to eq 0
+      expect(response).to redirect_to(user_path(user))
+      expect(flash[:alert]).to be
     end
 
     it 'uses audience help' do
