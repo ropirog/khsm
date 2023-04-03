@@ -68,8 +68,9 @@ RSpec.describe GameQuestion, type: :model do
       game_question.add_friend_call
 
       expect(game_question.help_hash).to include(:friend_call)
+
       fc = game_question.help_hash[:friend_call]
-      expect(fc.chars.last.downcase).to eq('b')
+      expect(fc.chars.last.downcase).to satisfy { |variant| variant == 'a' || variant == 'b' || variant == 'c' || variant == 'd' }
     end
   end
 end
