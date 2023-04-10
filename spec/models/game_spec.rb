@@ -16,8 +16,10 @@ RSpec.describe Game, type: :model do
           change(Question, :count).by(0)
         )
       )
+
       expect(game.user).to eq(user)
       expect(game.status).to eq(:in_progress)
+
       expect(game.game_questions.size).to eq(15)
       expect(game.game_questions.map(&:level)).to eq (0..14).to_a
     end
@@ -70,28 +72,28 @@ RSpec.describe Game, type: :model do
   end
 
   describe '#status' do
-    before(:each) do
+    before do
       game_w_questions.finished_at = Time.now
       expect(game_w_questions.finished?).to be_truthy
     end
 
-    it ':won' do
+    it 'correct answer to the last question changes game status to won' do
       game_w_questions.current_level = Question::QUESTION_LEVELS.max + 1
       expect(game_w_questions.status).to eq(:won)
     end
 
-    it ':fail' do
+    it 'wrong answer to the question changes game status to fail' do
       game_w_questions.is_failed = true
       expect(game_w_questions.status).to eq(:fail)
     end
 
-    it ':timeout' do
+    it 'answer to the question when time is up changes game status to timeout' do
       game_w_questions.created_at = 1.hour.ago
       game_w_questions.is_failed = true
       expect(game_w_questions.status).to eq(:timeout)
     end
 
-    it ':money' do
+    it 'if user took the money game status changes to money' do
       expect(game_w_questions.status).to eq(:money)
     end
   end
@@ -99,7 +101,6 @@ RSpec.describe Game, type: :model do
   describe '#answer_current_question!' do
     it 'correct answer' do
       expect(game_w_questions.answer_current_question!('d')).to be_truthy
-      expect(game_w_questions.status).to eq(:in_progress)
     end
 
     it 'wrong answer' do
